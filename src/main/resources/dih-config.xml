@@ -1,1 +1,28 @@
-/Users/bejean/CloudStation/Clients/GE/dev/solr/ge-dih-jdbc-datasource/solr-4.10.1/home/dih/conf/dih-config.xml
+<dataConfig>  
+	<dataSource 
+		type="JdbcDataSource2" 
+		configfile="/Users/bejean/CloudStation/Clients/GE/dev/solr/ge-dih-jdbc-datasource/src/main/resources/props.properties"
+		configloader="PropertiesFileConfigLoader"
+		configkeyregex="^(.*)_shard"
+		driver="com.mysql.jdbc.Driver"
+		url="${config.url}"
+		user="${config.user}"
+		password="${config.password}"
+		batchSize="1" />  
+	
+    <document name="players">  
+        <entity name="entry" processor="SqlEntityProcessor2" pk="id"
+           configfile="/Users/bejean/CloudStation/Clients/GE/dev/solr/ge-dih-jdbc-datasource/src/main/resources/props.properties"
+	       configloader="PropertiesFileConfigLoader"
+		   configkeyregex="^(.*)_shard"
+           query="SELECT * FROM ${config.table}"
+           deltaQuery="select id from ${config.table}">
+           deltaImportQuery="select * from ${config.table} where id='${dih.delta.id}'"
+        >  
+            <field column="id" name="id" />  
+            <field column="name" name="name_t" />  
+			<field column="description" name="description_t" />  
+        </entity>  
+    </document>  
+    
+</dataConfig>  

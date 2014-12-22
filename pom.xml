@@ -2,10 +2,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.apache.solr</groupId>
-	<artifactId>ge-dih-jdbc-datasource</artifactId>
+	<artifactId>dih-jdbc-datasource-2</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>ge-dih-jdbc-datasource</name>
-	<description>ge-dih-jdbc-datasource</description>
+	<name>dih-jdbc-datasource-2</name>
+	<description>dih-jdbc-datasource-2</description>
 
 	<dependencies>
 		<dependency>
