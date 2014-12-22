@@ -122,4 +122,5 @@ You need maven build tool.
    mvn package -Dmaven.test.skip=true
 
 
+Tested with Solr 4.10.2
     
