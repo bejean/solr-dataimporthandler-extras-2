@@ -7,4 +7,5 @@ mvn package -Dmaven.test.skip=true
 
 find . -name .DS_Store -type f -exec rm {} \;
 
-tar cfz dih-jdbc-datasource.tar build.sh pom.xml src target/*.jar
+rm dih-jdbc-datasource.tar
+tar cfz dih-jdbc-datasource.tar README.md build.sh pom.xml src target/*.jar
