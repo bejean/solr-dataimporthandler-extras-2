@@ -48,10 +48,10 @@ public abstract class ConfigLoader implements IConfigLoader {
 		return propValue;
 	}
 
-	@Override
-	public boolean reload() {
-		return load(configFile);
-	}
+//	@Override
+//	public boolean reload() {
+//		return load(configFile);
+//	}
 	
 	static public String getConfigKey(Context context, String configKeyRegex) {
 		String coreName = context.getSolrCore().getName();
