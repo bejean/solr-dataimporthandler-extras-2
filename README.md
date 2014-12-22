@@ -41,6 +41,7 @@ Sample DIH configuration file
 Sample external properties file
 -------------------------------
 
+```
 default.driver=com.mysql.jdbc.Driver
 
 # this is a comment
@@ -48,7 +49,7 @@ dih.url=jdbc:mysql://localhost:3306/dih_data
 dih.user=solr
 dih.password=solr123
 dih.table=entry
-
+```
 
 In this sample, "dih" property key allows to associate setting with the DIH configuration file.
 This key matches with the core name and the regex define in the "configkeyregex" attribute of the dataSource and the entity elements
@@ -57,6 +58,7 @@ This key matches with the core name and the regex define in the "configkeyregex"
 Example
 -------
 
+```
 core name = dih_shard1_replica1
 configkeyregex="^(.*)_shard"
 -> key = dih
@@ -66,6 +68,7 @@ configkeyregex="^people_(.*)_shard"
 -> key = application1
 
 default value for configkeyregex is "^(.*)_shard"
+```
 
 
 Available properties
@@ -79,6 +82,7 @@ In DIH configuration file, all replacer ${config.foo}, will be replace by proper
 Datasource attributes
 ---------------------
 
+```
 type="JdbcDataSource2"	
     Make the DIH use the JdbcDataSource2 class
 configfile="/<path_to_solr_directory/props.properties"	
@@ -87,11 +91,13 @@ configloader="PropertiesFileConfigLoader"
     The name of the class to be used in order to load parameters
 configkeyregex="^(.*)_shard"	
     The regex used in order to extract from the core name (“ge_activity_shard1_replica1”)  a key to be use in order to read in the properties file. With configkeyregex="^(.*)_shard", the key will be « ge_activity ». Properties read in the properties file will be : ge_activity.url=..., ge_activity.user=...
+```
 
 
 Entity attributes
 -----------------
 
+```
 processor="SqlEntityProcessor2"	
 	Make the DIH use the SqlEntityProcessor2  class
 configfile="/<path_to_solr_directory/props.properties"	
@@ -100,7 +106,7 @@ configloader="PropertiesFileConfigLoader"
 	The name of the class to be used in order to load parameters
 configkeyregex="^(.*)_shard"	
 	The regex used in order to extract from the core name (“ge_activity_shard1_replica1”)  a key to be use in order to read in the properties file. With configkeyregex="^(.*)_shard", the key will be « ge_activity ». Properties read in the properties file will be : ge_activity.schema=...,  ge_activity.table=...
-
+```
 
 Configuration loader
 --------------------
