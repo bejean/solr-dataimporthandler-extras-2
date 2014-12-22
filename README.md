@@ -79,7 +79,7 @@ In DIH configuration file, all replacer ${config.foo}, will be replace by proper
 Datasource attributes
 ---------------------
 
-type="JdbcDataSource2	
+type="JdbcDataSource2"	
     Make the DIH use the JdbcDataSource2 class
 configfile="/<path_to_solr_directory/props.properties"	
     The path to the properties file
@@ -92,7 +92,7 @@ configkeyregex="^(.*)_shard"
 Entity attributes
 -----------------
 
-processor="SqlEntityProcessor2 »	
+processor="SqlEntityProcessor2"	
 	Make the DIH use the SqlEntityProcessor2  class
 configfile="/<path_to_solr_directory/props.properties"	
 	The path to the properties file
