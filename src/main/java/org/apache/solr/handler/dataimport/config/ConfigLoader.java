@@ -1,8 +1,15 @@
 package org.apache.solr.handler.dataimport.config;
 
+import static org.apache.solr.handler.dataimport.DataImportHandlerException.SEVERE;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.solr.handler.dataimport.Context;
+import org.apache.solr.handler.dataimport.DataImportHandlerException;
 
 public abstract class ConfigLoader implements IConfigLoader {
 
@@ -44,6 +51,54 @@ public abstract class ConfigLoader implements IConfigLoader {
 	@Override
 	public boolean reload() {
 		return load(configFile);
+	}
+	
+	static public String getConfigKey(Context context, String configKeyRegex) {
+		String coreName = context.getSolrCore().getName();
+		String configKey = coreName;
+		if (configKeyRegex!=null && !"".equals(configKeyRegex)) {
+			Pattern pattern = Pattern.compile(configKeyRegex);
+			Matcher matcher = pattern.matcher(configKey);
+			if (matcher.find()) {
+				configKey = matcher.group(1);
+			}
+		} else {
+			if (configKey.indexOf("_shard")!=-1) configKey = configKey.substring(0,coreName.indexOf("_shard"));
+		}
+		return configKey;
+	}
+	
+	static public ConfigLoader getInstance (String configLoaderClasseName, String configKey) {
+		Class<?> configLoader;
+		try {
+			configLoader = Class.forName(configLoaderClasseName);
+		} catch (ClassNotFoundException e) {
+			throw new DataImportHandlerException(SEVERE, "Unable to load config loader : " + configLoaderClasseName);
+		}
+
+		ConfigLoader configLoaderInstance = null;
+		try {
+			Constructor<?> constructor;
+			try {
+				constructor = configLoader.getConstructor(String.class);
+			} catch (NoSuchMethodException e) {
+				throw new DataImportHandlerException(SEVERE, "Unable to instantiate config loader : " + configLoaderClasseName);
+			} catch (SecurityException e) {
+				throw new DataImportHandlerException(SEVERE, "Unable to instantiate config loader : " + configLoaderClasseName);
+			}
+			try {
+				configLoaderInstance = (ConfigLoader)constructor.newInstance(configKey);
+			} catch (IllegalArgumentException e) {
+				throw new DataImportHandlerException(SEVERE, "Unable to instantiate config loader : " + configLoaderClasseName);
+			} catch (InvocationTargetException e) {
+				throw new DataImportHandlerException(SEVERE, "Unable to instantiate config loader : " + configLoaderClasseName);
+			}
+		} catch (InstantiationException e) {
+			throw new DataImportHandlerException(SEVERE, "Unable to instantiate config loader : " + configLoaderClasseName);
+		} catch (IllegalAccessException e) {
+			throw new DataImportHandlerException(SEVERE, "Unable to instantiate config loader : " + configLoaderClasseName);
+		}
+		return configLoaderInstance;
 	}
 	
 }

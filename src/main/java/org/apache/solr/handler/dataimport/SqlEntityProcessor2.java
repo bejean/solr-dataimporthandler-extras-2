@@ -19,6 +19,7 @@ package org.apache.solr.handler.dataimport;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.solr.handler.dataimport.config.ConfigLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,16 +47,26 @@ import java.util.regex.Pattern;
 public class SqlEntityProcessor2 extends EntityProcessorBase {
   private static final Logger LOG = LoggerFactory.getLogger(SqlEntityProcessor2.class);
 
-  //protected DataSource2<Iterator<Map<String, Object>>> dataSource;
   protected DataSource<Iterator<Map<String, Object>>> dataSource;
-
+  protected ConfigLoader configLoaderInstance = null;
 
   @Override
   @SuppressWarnings("unchecked")
   public void init(Context context) {
     super.init(context);
-    //dataSource = (DataSource2<Iterator<Map<String, Object>>>) context.getDataSource();
     dataSource = context.getDataSource();
+    
+    String configFile = context.getEntityAttribute("configfile");
+    String configLoaderClasseName = context.getEntityAttribute("configloader");
+
+	if (configFile!=null && !"".equals(configFile) && configLoaderClasseName!=null && !"".equals(configLoaderClasseName)) {
+		if (configLoaderClasseName.indexOf(".")==-1) {
+			configLoaderClasseName = "org.apache.solr.handler.dataimport.config." + configLoaderClasseName;
+		}
+		String configKey = ConfigLoader.getConfigKey(context, context.getEntityAttribute("configkeyregex"));
+		configLoaderInstance = ConfigLoader.getInstance (configLoaderClasseName, configKey);
+		configLoaderInstance.load(configFile);
+	}
   }
 
   @SuppressWarnings("unchecked")
@@ -166,9 +177,9 @@ public class SqlEntityProcessor2 extends EntityProcessorBase {
   }
   
   private String propReplace(String propValue) {
-//      if (dataSource.getConfigLoader()!=null) {
-//    	  propValue = dataSource.getConfigLoader().propReplace(propValue);
-//      }
+      if (configLoaderInstance!=null) {
+    	  propValue = configLoaderInstance.propReplace(propValue);
+      }
       return propValue;
   }
 

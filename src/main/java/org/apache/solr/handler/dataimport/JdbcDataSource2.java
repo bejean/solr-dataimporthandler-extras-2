@@ -26,15 +26,12 @@ import org.slf4j.LoggerFactory;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.*;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -47,7 +44,7 @@ import java.util.regex.Pattern;
  * @since solr 1.3
  */
 public class JdbcDataSource2 extends
-DataSource2<Iterator<Map<String, Object>>> {
+DataSource<Iterator<Map<String, Object>>> {
 	private static final Logger LOG = LoggerFactory.getLogger(JdbcDataSource.class);
 
 	protected Callable<Connection> factory;
@@ -63,8 +60,6 @@ DataSource2<Iterator<Map<String, Object>>> {
 	private int batchSize = FETCH_SIZE;
 
 	private int maxRows = 0;
-
-	protected ConfigLoader configLoaderInstance = null;;
 
 	@Override
 	public void init(Context context, Properties initProps) {
@@ -108,19 +103,9 @@ DataSource2<Iterator<Map<String, Object>>> {
 		}
 	}
 
-	public ConfigLoader getConfigLoader() {
-		return configLoaderInstance;
-	}
-
 	protected Callable<Connection> createConnectionFactory(final Context context,
 			final Properties initProps) {
 		//    final VariableResolver resolver = context.getVariableResolver();
-
-		Properties initPropsSave = new Properties();
-
-		for (Map.Entry<?, ?> entry: initProps.entrySet()) {  
-			initPropsSave.setProperty((String) entry.getKey(), (String) entry.getValue());
-		}  
 
 		String configFile = initProps.getProperty(CONFIG_FILE); 
 		String configLoaderClasseName = initProps.getProperty(CONFIG_LOADER); 
@@ -128,48 +113,8 @@ DataSource2<Iterator<Map<String, Object>>> {
 			if (configLoaderClasseName.indexOf(".")==-1) {
 				configLoaderClasseName = "org.apache.solr.handler.dataimport.config." + configLoaderClasseName;
 			}
-
-			Class<?> configLoader;
-			try {
-				configLoader = Class.forName(configLoaderClasseName);
-			} catch (ClassNotFoundException e) {
-				throw new DataImportHandlerException(SEVERE, "Unable to load config loader : " + configLoaderClasseName);
-			}
-
-			String coreName = context.getSolrCore().getName();
-			String configKey = coreName;
-			if (initProps.containsKey("configkeyregex")) {
-				Pattern pattern = Pattern.compile(initProps.getProperty("configkeyregex"));
-				Matcher matcher = pattern.matcher(configKey);
-				if (matcher.find()) {
-					configKey = matcher.group(1);
-				}
-			} else {
-				if (configKey.indexOf("_shard")!=-1) configKey = configKey.substring(0,coreName.indexOf("_shard"));
-			}
-
-			try {
-				Constructor<?> constructor;
-				try {
-					constructor = configLoader.getConstructor(String.class);
-				} catch (NoSuchMethodException e) {
-					throw new DataImportHandlerException(SEVERE, "Unable to instantiate config loader : " + configLoaderClasseName);
-				} catch (SecurityException e) {
-					throw new DataImportHandlerException(SEVERE, "Unable to instantiate config loader : " + configLoaderClasseName);
-				}
-				try {
-					configLoaderInstance = (ConfigLoader)constructor.newInstance(configKey);
-				} catch (IllegalArgumentException e) {
-					throw new DataImportHandlerException(SEVERE, "Unable to instantiate config loader : " + configLoaderClasseName);
-				} catch (InvocationTargetException e) {
-					throw new DataImportHandlerException(SEVERE, "Unable to instantiate config loader : " + configLoaderClasseName);
-				}
-			} catch (InstantiationException e) {
-				throw new DataImportHandlerException(SEVERE, "Unable to instantiate config loader : " + configLoaderClasseName);
-			} catch (IllegalAccessException e) {
-				throw new DataImportHandlerException(SEVERE, "Unable to instantiate config loader : " + configLoaderClasseName);
-			}
-
+			String configKey = ConfigLoader.getConfigKey(context, initProps.getProperty("configkeyregex"));
+			ConfigLoader configLoaderInstance = ConfigLoader.getInstance (configLoaderClasseName, configKey);
 			configLoaderInstance.load(configFile);
 
 			for (Map.Entry<?, ?> entry: initProps.entrySet()) {  
