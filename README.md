@@ -50,8 +50,8 @@ dih.password=solr123
 dih.table=entry
 ```
 
-In this sample, "dih" property key allows to associate setting with the DIH configuration file.
-This key matches with the core name and the regex define in the "configkeyregex" attribute of the dataSource and the entity elements
+In this sample, "dih" prefix allows to associate settings section in properties file to the collection.
+This prefix matches with the core name and the regex define in the "configkeyregex" attribute of the dataSource and the entity elements
 
 
 Example
