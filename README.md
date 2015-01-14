@@ -8,7 +8,6 @@ Several collections can use the same schema and the same DIH settings. For insta
 Sample DIH configuration file
 -----------------------------
 
-<dataConfig> 
 	<dataSource 
 		type="JdbcDataSource2" 
 		configfile="/<path_to_solr_directory/props.properties"
@@ -35,7 +34,7 @@ Sample DIH configuration file
 		    <field column="description" name="description_t" />  
 		</entity>  
 	</document>  
-</dataConfig> 
+ 
 
 
 Sample external properties file
