@@ -1,9 +1,9 @@
 <dataConfig>  
 	<dataSource 
 		type="JdbcDataSource2" 
-		configfile="/Users/bejean/CloudStation/Clients/GE/dev/solr/ge-dih-jdbc-datasource/src/main/resources/props.properties"
+		configfile="/Users/bejean/CloudStation/Clients/GE/dev/solr/ge-dih-jdbc-datasource/src/main/resources/dbsimple.properties"
         configVersion="2"
-		configloader="PropertiesFileConfigLoader"
+		configloader="DbSimpleConfigLoader"
 		configkeyregex="^(.*)_shard"
 		driver="com.mysql.jdbc.Driver"
 		url="${config.url}"
@@ -13,9 +13,9 @@
 	
     <document name="players">  
         <entity name="entry" processor="SqlEntityProcessor2" pk="id"
-           configfile="/Users/bejean/CloudStation/Clients/GE/dev/solr/ge-dih-jdbc-datasource/src/main/resources/props.properties"
+           configfile="/Users/bejean/CloudStation/Clients/GE/dev/solr/ge-dih-jdbc-datasource/src/main/resources/dbsimple.properties"
            configVersion="2"
-	       configloader="PropertiesFileConfigLoader"
+	       configloader="DbSimpleConfigLoader"
 		   configkeyregex="^(.*)_shard"
            query="SELECT * FROM ${config.table}"
            deltaQuery="select id from ${config.table}"

@@ -8,8 +8,10 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.solr.core.SolrCore;
 import org.apache.solr.handler.dataimport.Context;
 import org.apache.solr.handler.dataimport.DataImportHandlerException;
+import org.apache.solr.handler.dataimport.DocBuilder;
 
 public abstract class ConfigLoader implements IConfigLoader {
 
@@ -18,21 +20,21 @@ public abstract class ConfigLoader implements IConfigLoader {
 	protected Properties defaultProp = new Properties(); 
 	protected Properties globalProp = new Properties(); 
 	protected String configFile = null;
-	
+
 	public ConfigLoader(String configKey) {
 		this.configKey = configKey.trim().toLowerCase();
 	}
 
 	@Override
 	public String propReplace(String propValue) {
-		
+
 		Pattern p = Pattern.compile("\\$\\{config\\.(.*)\\}");
 		Matcher m = p.matcher(propValue);
 		while (m.find()) {
 			String propName = m.group(1).toLowerCase(); // properties name are case insensitive
-			
+
 			String replacement = "";
-			
+
 			if (collectionProp.containsKey(propName)) {
 				replacement = collectionProp.getProperty(propName);
 			} else {
@@ -40,7 +42,7 @@ public abstract class ConfigLoader implements IConfigLoader {
 					replacement = defaultProp.getProperty(propName);
 				}			
 			}
-			
+
 			if (!"".equals(replacement)) {
 				propValue = propValue.replaceAll("\\$\\{config\\." + propName.replace(".", "\\.") + "\\}", replacement);
 			}
@@ -48,11 +50,6 @@ public abstract class ConfigLoader implements IConfigLoader {
 		return propValue;
 	}
 
-//	@Override
-//	public boolean reload() {
-//		return load(configFile);
-//	}
-	
 	static public String getConfigKey(Context context, String configKeyRegex) {
 		String coreName = context.getSolrCore().getName();
 		String configKey = coreName;
@@ -67,7 +64,7 @@ public abstract class ConfigLoader implements IConfigLoader {
 		}
 		return configKey;
 	}
-	
+
 	static public ConfigLoader getInstance (String configLoaderClasseName, String configKey) {
 		Class<?> configLoader;
 		try {
@@ -100,5 +97,22 @@ public abstract class ConfigLoader implements IConfigLoader {
 		}
 		return configLoaderInstance;
 	}
-	
+
+	static Class loadClass(String name, SolrCore core) throws ClassNotFoundException {
+		try {
+			return core != null ?
+					core.getResourceLoader().findClass(name, Object.class) :
+						Class.forName(name);
+		} catch (Exception e) {
+			try {
+				String n = DocBuilder.class.getPackage().getName() + "." + name;
+				return core != null ?
+						core.getResourceLoader().findClass(n, Object.class) :
+							Class.forName(n);
+			} catch (Exception e1) {
+				throw new ClassNotFoundException("Unable to load " + name + " or " + DocBuilder.class.getPackage().getName() + "." + name, e);
+			}
+		}
+	}
+
 }

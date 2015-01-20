@@ -30,9 +30,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.*;
 import java.util.*;
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
+import java.util.concurrent.*;
 
 /**
  * <p> A DataSource implementation which can fetch data using JDBC. </p> <p/> <p> Refer to <a
@@ -115,7 +113,7 @@ DataSource<Iterator<Map<String, Object>>> {
 			}
 			String configKey = ConfigLoader.getConfigKey(context, initProps.getProperty("configkeyregex"));
 			ConfigLoader configLoaderInstance = ConfigLoader.getInstance (configLoaderClasseName, configKey);
-			configLoaderInstance.load(configFile);
+			configLoaderInstance.load(context, configFile);
 
 			for (Map.Entry<?, ?> entry: initProps.entrySet()) {  
 				String key = (String) entry.getKey();  

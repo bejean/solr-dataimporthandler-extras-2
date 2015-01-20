@@ -65,7 +65,7 @@ public class SqlEntityProcessor2 extends EntityProcessorBase {
 		}
 		String configKey = ConfigLoader.getConfigKey(context, context.getEntityAttribute("configkeyregex"));
 		configLoaderInstance = ConfigLoader.getInstance (configLoaderClasseName, configKey);
-		configLoaderInstance.load(configFile);
+		configLoaderInstance.load(context, configFile);
 	}
   }
 
