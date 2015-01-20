@@ -5,9 +5,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import org.apache.solr.handler.dataimport.Context;
 
 public class PropertiesFileConfigLoader extends ConfigLoader implements IConfigLoader {
 
@@ -16,7 +15,7 @@ public class PropertiesFileConfigLoader extends ConfigLoader implements IConfigL
 	}
 
 	@Override
-	public boolean load(String configFile) {
+	public boolean load(Context context, String configFile) {
 		this.configFile = configFile;
 		File f = new File(configFile);
 		BufferedReader reader;
