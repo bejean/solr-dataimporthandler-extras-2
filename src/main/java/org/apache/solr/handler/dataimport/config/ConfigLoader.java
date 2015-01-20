@@ -98,7 +98,8 @@ public abstract class ConfigLoader implements IConfigLoader {
 		return configLoaderInstance;
 	}
 
-	static Class loadClass(String name, SolrCore core) throws ClassNotFoundException {
+	// Because DocBuilder.loadClass not visible
+	static protected Class<?> loadClass(String name, SolrCore core) throws ClassNotFoundException {
 		try {
 			return core != null ?
 					core.getResourceLoader().findClass(name, Object.class) :
@@ -110,7 +111,7 @@ public abstract class ConfigLoader implements IConfigLoader {
 						core.getResourceLoader().findClass(n, Object.class) :
 							Class.forName(n);
 			} catch (Exception e1) {
-				throw new ClassNotFoundException("Unable to load " + name + " or " + DocBuilder.class.getPackage().getName() + "." + name, e);
+				throw new ClassNotFoundException("Unable to load " + name, e);
 			}
 		}
 	}

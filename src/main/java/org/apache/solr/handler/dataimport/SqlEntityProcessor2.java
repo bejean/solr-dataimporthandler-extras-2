@@ -69,7 +69,7 @@ public class SqlEntityProcessor2 extends EntityProcessorBase {
 	}
   }
 
-  @SuppressWarnings("unchecked")
+  //@SuppressWarnings("unchecked")
   protected void initQuery(String q) {
     try {
       DataImporter.QUERY_COUNT.get().incrementAndGet();
