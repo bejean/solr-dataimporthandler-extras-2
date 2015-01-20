@@ -18,7 +18,7 @@ public class DbSimpleConfigLoader extends ConfigLoader implements IConfigLoader 
 
 	@Override
 	public boolean load(final Context context, String configFile) {
-		
+
 		// load settings for settings db access
 		this.configFile = configFile;
 		File f = new File(configFile);
@@ -29,13 +29,13 @@ public class DbSimpleConfigLoader extends ConfigLoader implements IConfigLoader 
 			e.printStackTrace();
 			return false;
 		}
-		
+
 		String driver = null;
 		String url = null;
 		String table = null;
 		String user = null;
 		String password = null;
-				
+
 		String line = null;
 		try {
 			while((line = reader.readLine()) != null) {
@@ -61,17 +61,11 @@ public class DbSimpleConfigLoader extends ConfigLoader implements IConfigLoader 
 				return false;
 			}
 		}
-		
+
 		Properties connectionProps = new Properties();
-	    connectionProps.put("user", user);
-	    connectionProps.put("password", password);
-	    
-//		try {
-//			loadClass(driver, context.getSolrCore());
-//		} catch (ClassNotFoundException e) {
-//			wrapAndThrow(SEVERE, e, "Could not load driver: " + driver);
-//		}
-		
+		connectionProps.put("user", user);
+		connectionProps.put("password", password);
+
 		// load settings in db
 		Connection c = null;
 		try {
@@ -90,7 +84,7 @@ public class DbSimpleConfigLoader extends ConfigLoader implements IConfigLoader 
 				return false;
 			}
 		}
-		
+
 		try {
 			Statement stmt = null;
 			try {
@@ -98,20 +92,20 @@ public class DbSimpleConfigLoader extends ConfigLoader implements IConfigLoader 
 				c.setAutoCommit(true);
 				c.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
 				c.setHoldability(ResultSet.CLOSE_CURSORS_AT_COMMIT);
-				
+
 				String query = "SELECT scope, name, value FROM " + table;
 				stmt = c.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
 				if (stmt.execute(query)) {
 					ResultSet resultSet = stmt.getResultSet();
-					
-					
+
+
 					while (resultSet.next()) {
-			            String scope = resultSet.getString("scope");
-			            String name = resultSet.getString("name");
-			            String value = resultSet.getString("value");
+						String scope = resultSet.getString("scope");
+						String name = resultSet.getString("name");
+						String value = resultSet.getString("value");
 						if ("default".equals(scope)) defaultProp.setProperty(name, value);
 						if (configKey.equals(scope)) collectionProp.setProperty(name, value);
-			        }
+					}
 				} else {
 					return false;
 				}
@@ -119,8 +113,8 @@ public class DbSimpleConfigLoader extends ConfigLoader implements IConfigLoader 
 				e.printStackTrace();
 				return false;
 			} finally {
-		        if (stmt != null) stmt.close();
-		        if (c != null) c.close();
+				if (stmt != null) stmt.close();
+				if (c != null) c.close();
 			} 
 		} catch (SQLException e) {
 			e.printStackTrace();
