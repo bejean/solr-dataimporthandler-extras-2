@@ -111,7 +111,11 @@ Configuration loader
 --------------------
 
 The attribute "configloader" specifies which configuration loader has to be used.
-"PropertiesFileConfigLoader" is the available in order to load configuration from standard properties files.
+
+Available configuration loaders are :
+
+* "PropertiesFileConfigLoader" : loads configuration from standard properties files.
+* "DbSimpleConfigLoader" : loads configuration from simple jdbc database.
 
 It is possible to implement a specific configuration loader. A Class have to be developed and implement IConfigLoader interface (in package org.apache.solr.handler.dataimport.config)
 
