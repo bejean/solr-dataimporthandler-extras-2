@@ -1,0 +1,13 @@
+<dataConfig>  
+   <document name="tweet">  
+        <entity name="twitter" pk="id" processor="TwitterEntityProcessor"
+        	consumerKey="8fu5HLlZJczKfJZCgWkPESXul"
+			consumerSecret="omdmX1uzTCi7HXjIiimrQfvazlcEkiInBUCwzT0P563tWCJM3p"
+			accessToken="9278792-poEzSTKlibpAV6HN8Npm6eHlruJFnRkwyiAkSON2L8"
+			accessTokenSecret="pCM6X3SHEk2gEK571hUYOZyH8TFNdRjmxh27LvzDN3ndd"
+			criteria = "#obama"
+         >  
+            <field column="id" name="id" />  
+        </entity>  
+    </document>  
+</dataConfig>  

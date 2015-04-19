@@ -2,10 +2,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.apache.solr</groupId>
-	<artifactId>dih-jdbc-datasource-2</artifactId>
+	<artifactId>solr-dataimporthandler-extras-2</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>dih-jdbc-datasource-2</name>
-	<description>dih-jdbc-datasource-2</description>
+	<name>solr-dataimporthandler-extras-2</name>
+	<description>solr-dataimporthandler-extras-2</description>
 
 	<dependencies>
 		<dependency>
@@ -18,7 +18,12 @@
 			<artifactId>solr-dataimporthandler</artifactId>
 			<version>4.10.2</version>
 		</dependency>
-	</dependencies>
+      <dependency>
+           <groupId>org.twitter4j</groupId>
+           <artifactId>twitter4j-core</artifactId>
+           <version>[4.0,)</version>
+       </dependency>
+   	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
@@ -33,5 +38,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>

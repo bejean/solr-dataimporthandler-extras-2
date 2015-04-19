@@ -20,10 +20,14 @@
            query="SELECT * FROM ${config.table}"
            deltaQuery="select id from ${config.table}"
            deltaImportQuery="select * from ${config.table} where id='${dih.delta.id}'"
+           transformer="RegexTransformer,DumpDocTransformer"
+           dumpPath="/tmp"
+           dumpIdField="id"
         >  
             <field column="id" name="id" />  
             <field column="name" name="name_t" />  
 			<field column="description" name="description_t" />  
+ 			<field column="attribute" name="attribute_ss" splitBy="," />  
         </entity>  
     </document>  
     

@@ -1440,15 +1440,22 @@
     </lst>
   </searchComponent>
 
+<!--   
+  <requestHandler class="org.apache.solr.handler.dataimport.DataImportHandler" name="/dataimport_db"> 
+    <lst name="defaults"> 
+      <str name="config">dih-config-db.xml</str>
+    </lst> 
+  </requestHandler>
+
+  <requestHandler class="org.apache.solr.handler.dataimport.DataImportHandler" name="/dataimport_twitter"> 
+    <lst name="defaults"> 
+      <str name="config">dih-config-twitter.xml</str>
+    </lst> 
+  </requestHandler>
+-->
   <requestHandler class="org.apache.solr.handler.dataimport.DataImportHandler" name="/dataimport"> 
     <lst name="defaults"> 
       <str name="config">dih-config.xml</str>
-    </lst> 
-  </requestHandler>
-   
-  <requestHandler class="org.apache.solr.handler.dataimport.DataImportHandler" name="/dataimport2"> 
-    <lst name="defaults"> 
-      <str name="config">dih-config-db.xml</str>
     </lst> 
   </requestHandler>
 

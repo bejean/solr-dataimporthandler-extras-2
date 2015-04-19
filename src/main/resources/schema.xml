@@ -121,7 +121,13 @@
      installations. See the <uniqueKey> declaration below where <uniqueKey> is set to "id".
    -->   
    <field name="id" type="string" indexed="true" stored="true" required="true" multiValued="false" /> 
-        
+
+   <field name="tweet_lang" type="string" indexed="true" stored="true" multiValued="false" /> 
+   <field name="tweet_user" type="string" indexed="true" stored="true" multiValued="false" /> 
+   <field name="tweet_pseudo" type="string" indexed="true" stored="true" multiValued="false" /> 
+   <field name="tweet_text" type="text_general" indexed="true" stored="true"/>
+   <field name="tweet_date" type="string" indexed="true" stored="true" multiValued="false" /> 
+
    <field name="sku" type="text_en_splitting_tight" indexed="true" stored="true" omitNorms="true"/>
    <field name="name" type="text_general" indexed="true" stored="true"/>
    <field name="manu" type="text_general" indexed="true" stored="true" omitNorms="true"/>
