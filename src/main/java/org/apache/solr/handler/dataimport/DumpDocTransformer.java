@@ -46,6 +46,14 @@ import org.w3c.dom.Element;
 public class DumpDocTransformer extends Transformer {
 	private static final Logger LOG = LoggerFactory.getLogger(DumpDocTransformer.class);
 
+	static boolean include(String name, List<String> fieldExcludeList, List<String> fieldIncludeList) {
+		if (fieldExcludeList!=null && fieldExcludeList.contains(name))
+			return false;
+		if (fieldIncludeList==null || fieldIncludeList.contains(name))
+			return true;
+		return false;
+	}
+	
 	@Override
 	@SuppressWarnings("unchecked")
 	public Map<String, Object> transformRow(Map<String, Object> row,
@@ -53,7 +61,30 @@ public class DumpDocTransformer extends Transformer {
 
 		String path = ctx.getEntityAttribute("dumpPath");
 		String idField = ctx.getEntityAttribute("dumpIdField");
+		String fieldExclude = ctx.getEntityAttribute("dumpFieldExclude");
+		String fieldInclude = ctx.getEntityAttribute("dumpFieldInclude");
+		boolean fieldNameInclude = "true".equals(ctx.getEntityAttribute("dumpFieldNameInclude"));
 
+		List<String> fieldExcludeList = null;
+		if (fieldExclude!=null) {
+			fieldExcludeList = Arrays.asList(fieldExclude.split("\\s*,\\s*"));
+		}
+		
+		List<String> fieldIncludeList = null;
+		if (fieldInclude!=null) {
+			fieldIncludeList = new ArrayList<String>(Arrays.asList(fieldInclude.split("\\s*,\\s*")));
+		}
+		
+		if (fieldNameInclude) {
+			if (fieldInclude==null) fieldIncludeList = new ArrayList<String>(Arrays.asList("".split("\\s*,\\s*")));
+			List<Map<String, String>> fields = ctx.getAllEntityFields();
+		    for (Map<String, String> field : fields) {
+		        String name = field.get(DataImporter.NAME).toLowerCase();
+		        if (!fieldIncludeList.contains(name))
+		        	fieldIncludeList.add(name);
+		    }
+		}
+		
 		DocumentBuilder builder = null;
 		try {
 			builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -78,7 +109,8 @@ public class DumpDocTransformer extends Transformer {
 					Element newField = document.createElement("field");
 					newField.setAttribute("name", key);
 					newField.setTextContent(item);
-					doc.appendChild(newField);
+					if (include( key, fieldExcludeList, fieldIncludeList))
+						doc.appendChild(newField);
 				}
 			} else {
 				if (o instanceof Integer) {
@@ -91,7 +123,8 @@ public class DumpDocTransformer extends Transformer {
 					Element newField = document.createElement("field");
 					newField.setAttribute("name", key);
 					newField.setTextContent(value);
-					doc.appendChild(newField);
+					if (include( key, fieldExcludeList, fieldIncludeList))
+						doc.appendChild(newField);
 				}
 			}
 
@@ -120,6 +153,9 @@ public class DumpDocTransformer extends Transformer {
 		   transformer="RegexTransformer,DumpDocTransformer"
            dumpPath="/tmp"
            dumpIdField="id"
+           dumpFieldExclude="kk,yy"
+           dumpFieldInclude="ee"
+           dumpFieldNameInclude="true"
            
 		<add>
 			<doc>

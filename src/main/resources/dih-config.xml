@@ -23,6 +23,8 @@
            transformer="RegexTransformer,DumpDocTransformer"
            dumpPath="/tmp"
            dumpIdField="id"
+           dumpFieldExclude="description,description2"
+			dumpFieldNameInclude="true"
         >  
             <field column="id" name="id" />  
             <field column="name" name="name_t" />  
